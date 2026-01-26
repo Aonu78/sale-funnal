@@ -7,9 +7,7 @@
     <h1 style="margin:0;">{{ $data['title'] ?: 'Thank you!' }}</h1>
     <p style="color:#64748b;margin-top:10px;line-height:1.6;">{{ $data['body'] ?: 'We received your request.' }}</p>
 
-    <div style="margin-top:14px;">
-      <a href="{{ url('/dashboard') }}" style="text-decoration:none;color:#2563eb;">Go to Dashboard</a>
-    </div>
+    <p style="color:#64748b;margin-top:10px;line-height:1.6;">We have received your request and we will get back to you soon.</p>
 
     @if(!empty($data['tag']))
       <div style="margin-top:12px;color:#94a3b8;font-size:12px;">Tag: {{ $data['tag'] }}</div>

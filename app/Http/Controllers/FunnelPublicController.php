@@ -47,6 +47,6 @@ class FunnelPublicController extends Controller
     public function thanks(string $slug)
     {
         $funnel = Funnel::where('slug', $slug)->where('is_active', true)->firstOrFail();
-        return view('funnels.public.thanks', compact('funnel'));
+        return view('funnels.public.thanks_dynamic', compact('funnel'));
     }
 }
