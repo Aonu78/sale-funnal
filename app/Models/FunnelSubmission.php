@@ -15,4 +15,9 @@ class FunnelSubmission extends Model
     {
         return $this->belongsTo(Funnel::class);
     }
+    public function answers()
+    {
+        return $this->hasMany(\App\Models\FunnelSubmissionAnswer::class);
+    }
+
 }

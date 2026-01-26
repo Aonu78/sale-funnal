@@ -1,10 +1,10 @@
 <?php
+
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Funnel;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class FunnelController extends Controller
 {
@@ -19,6 +19,38 @@ class FunnelController extends Controller
         return view('admin.funnels.create');
     }
 
+    private function uploadHeroToPublic(Request $request): ?string
+    {
+        if (!$request->hasFile('hero_image')) {
+            return null;
+        }
+
+        $file = $request->file('hero_image');
+
+        $name = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+
+        $folder = public_path('funnels');
+        if (!is_dir($folder)) {
+            mkdir($folder, 0755, true);
+        }
+
+        // Move file to public/funnels
+        $file->move($folder, $name);
+
+        // Save relative path
+        return 'funnels/' . $name;
+    }
+
+    private function deletePublicFile(?string $relativePath): void
+    {
+        if (!$relativePath) return;
+
+        $full = public_path($relativePath);
+        if (is_file($full)) {
+            @unlink($full);
+        }
+    }
+
     public function store(Request $request)
     {
         $data = $request->validate([
@@ -26,17 +58,12 @@ class FunnelController extends Controller
             'title' => ['required','string','max:190'],
             'seo_title' => ['nullable','string','max:190'],
             'seo_description' => ['nullable','string','max:300'],
-            'hero_image' => ['nullable','image','max:2048'],
-            'question_label' => ['nullable','string','max:255'],
-            'question_type' => ['required','in:yes_no,text'],
+            'hero_image' => ['nullable','image','mimes:jpg,jpeg,png,webp','max:2048'],
             'footer_text' => ['nullable','string'],
             'is_active' => ['nullable','boolean'],
         ]);
 
-        $path = null;
-        if ($request->hasFile('hero_image')) {
-            $path = $request->file('hero_image')->store('funnels', 'public');
-        }
+        $path = $this->uploadHeroToPublic($request);
 
         Funnel::create([
             'slug' => $data['slug'],
@@ -44,8 +71,6 @@ class FunnelController extends Controller
             'seo_title' => $data['seo_title'] ?? null,
             'seo_description' => $data['seo_description'] ?? null,
             'hero_image_path' => $path,
-            'question_label' => $data['question_label'] ?? null,
-            'question_type' => $data['question_type'],
             'footer_text' => $data['footer_text'] ?? null,
             'is_active' => (bool)($data['is_active'] ?? true),
         ]);
@@ -65,18 +90,17 @@ class FunnelController extends Controller
             'title' => ['required','string','max:190'],
             'seo_title' => ['nullable','string','max:190'],
             'seo_description' => ['nullable','string','max:300'],
-            'hero_image' => ['nullable','image','max:2048'],
-            'question_label' => ['nullable','string','max:255'],
-            'question_type' => ['required','in:yes_no,text'],
+            'hero_image' => ['nullable','image','mimes:jpg,jpeg,png,webp','max:2048'],
             'footer_text' => ['nullable','string'],
             'is_active' => ['nullable','boolean'],
         ]);
 
         if ($request->hasFile('hero_image')) {
-            if ($funnel->hero_image_path) {
-                Storage::disk('public')->delete($funnel->hero_image_path);
-            }
-            $funnel->hero_image_path = $request->file('hero_image')->store('funnels', 'public');
+            // delete old
+            $this->deletePublicFile($funnel->hero_image_path);
+
+            // upload new
+            $funnel->hero_image_path = $this->uploadHeroToPublic($request);
         }
 
         $funnel->fill([
@@ -84,8 +108,6 @@ class FunnelController extends Controller
             'title' => $data['title'],
             'seo_title' => $data['seo_title'] ?? null,
             'seo_description' => $data['seo_description'] ?? null,
-            'question_label' => $data['question_label'] ?? null,
-            'question_type' => $data['question_type'],
             'footer_text' => $data['footer_text'] ?? null,
             'is_active' => (bool)($data['is_active'] ?? false),
         ])->save();
@@ -95,9 +117,8 @@ class FunnelController extends Controller
 
     public function destroy(Funnel $funnel)
     {
-        if ($funnel->hero_image_path) {
-            Storage::disk('public')->delete($funnel->hero_image_path);
-        }
+        $this->deletePublicFile($funnel->hero_image_path);
+
         $funnel->delete();
 
         return redirect()->route('admin.funnels.index')->with('success', 'Funnel deleted');

@@ -16,4 +16,14 @@ class Funnel extends Model
     {
         return $this->hasMany(FunnelSubmission::class);
     }
+    public function questions()
+    {
+        return $this->hasMany(\App\Models\FunnelQuestion::class)->orderBy('sort_order');
+    }
+
+    public function routingRules()
+    {
+        return $this->hasMany(\App\Models\FunnelRoutingRule::class)->orderByDesc('priority');
+    }
+
 }

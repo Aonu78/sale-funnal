@@ -16,9 +16,6 @@ return new class extends Migration {
 
             $table->string('hero_image_path')->nullable();
 
-            $table->string('question_label')->nullable();
-            $table->enum('question_type', ['yes_no', 'text'])->default('yes_no');
-
             $table->text('footer_text')->nullable();
             $table->boolean('is_active')->default(true);
 
