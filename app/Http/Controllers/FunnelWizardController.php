@@ -62,6 +62,9 @@ class FunnelWizardController extends Controller
                 'first_name' => ['required','string','max:120'],
                 'email' => ['required','email','max:190'],
                 'phone' => ['required','string','max:40'],
+                'preferred_call_date_from' => ['nullable','date','after:today'],
+                'preferred_call_date_to' => ['nullable','date_format:H:i'],
+                'call_availability_description' => ['nullable','string','max:1000'],
             ]);
 
             $saved = $request->session()->get("funnel_{$funnel->id}_answers", []);
@@ -91,28 +94,14 @@ class FunnelWizardController extends Controller
                 ]);
             }
 
-            // Route tag
-            $matchedRule = $router->pickTag($funnel, $saved);
-            if ($matchedRule) {
-                $submission->tag = $matchedRule->tag;
-                $submission->tag_meta = [
-                    'rule_id' => $matchedRule->id,
-                    'priority' => $matchedRule->priority,
-                ];
-                $submission->save();
+            // Store submission ID in session for tag generation in thanks method
+            $request->session()->put("funnel_{$funnel->id}_submission_id", $submission->id);
 
-                $request->session()->put("funnel_{$funnel->id}_thankyou", [
-                    'title' => $matchedRule->thankyou_title,
-                    'body' => $matchedRule->thankyou_body,
-                    'tag' => $matchedRule->tag,
-                ]);
-            } else {
-                $request->session()->put("funnel_{$funnel->id}_thankyou", [
-                    'title' => 'Thank you!',
-                    'body' => 'We received your details. We will contact you soon.',
-                    'tag' => null,
-                ]);
-            }
+            $request->session()->put("funnel_{$funnel->id}_thankyou", [
+                'title' => 'Thank you!',
+                'body' => 'We received your details. We will contact you soon.',
+                'tag' => null,
+            ]);
 
             // clear wizard answers
             $request->session()->forget("funnel_{$funnel->id}_answers");
@@ -153,7 +142,7 @@ class FunnelWizardController extends Controller
         return redirect()->route('funnels.step', [$funnel->slug, $step + 1]);
     }
 
-    public function thanks(Request $request, string $slug)
+    public function thanks(Request $request, string $slug, FunnelRouter $router)
     {
         $funnel = Funnel::where('slug', $slug)->where('is_active', true)->firstOrFail();
         $data = $request->session()->get("funnel_{$funnel->id}_thankyou", [
@@ -161,6 +150,55 @@ class FunnelWizardController extends Controller
             'body' => 'We received your request.',
             'tag' => null,
         ]);
+
+        // Get the latest submission and generate tag dynamically
+        $submissionId = $request->session()->get("funnel_{$funnel->id}_submission_id");
+        if ($submissionId) {
+            $submission = FunnelSubmission::with('answers.question')->find($submissionId);
+            if ($submission) {
+                // Build answers array for routing
+                $answersByKey = [];
+                foreach ($submission->answers as $answer) {
+                    $key = $answer->question->key;
+                    if ($key) {
+                        if ($answer->answer_text !== null) {
+                            $answersByKey[$key] = $answer->answer_text;
+                        } elseif ($answer->answer_json !== null) {
+                            $answersByKey[$key] = $answer->answer_json;
+                        }
+                    }
+                }
+
+                // Generate tag using router
+                $matchedRule = $router->pickTag($funnel, $answersByKey);
+                if ($matchedRule) {
+                    $data['title'] = $matchedRule->thankyou_title;
+                    $data['body'] = $matchedRule->thankyou_body;
+                    $data['tag'] = $matchedRule->tag;
+
+                    // Save tag to database for admin purposes
+                    $submission->tag = $matchedRule->tag;
+                    $submission->tag_meta = [
+                        'rule_id' => $matchedRule->id,
+                        'priority' => $matchedRule->priority,
+                    ];
+                    $submission->save();
+                }
+            }
+        }
+
+        // Override body based on tag if present
+        if ($data['tag'] && $data['tag'] !== null) {
+            if ($data['tag'] === 'IUL_Prospect') {
+                $data['body'] = 'You may qualify for a tax-advantaged strategy that offers growth, protection, and flexibility.';
+            } elseif ($data['tag'] === 'Term_Life_Prospect') {
+                $data['body'] = 'Protecting your family starts with affordable coverage tailored to your stage of life.';
+            } elseif ($data['tag'] === 'IRA_Rollover_Prospect') {
+                $data['body'] = 'Rolling over your retirement assets may reduce fees and improve control.';
+            } elseif ($data['tag'] === 'Annuity_Prospect') {
+                $data['body'] = 'Lifetime income options can help create certainty regardless of market conditions.';
+            }
+        }
 
         return view('funnels.public.thanks_dynamic', compact('funnel','data'));
     }

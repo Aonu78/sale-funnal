@@ -88,6 +88,26 @@
                     <div class="value">{{ $submission->question_answer ?: '—' }}</div>
                 </div>
 
+                @if($submission->answers->count() > 0)
+                <div class="box" style="grid-column: span 2;">
+                    <div class="label">Detailed Answers</div>
+                    <div class="value">
+                        @foreach($submission->answers as $answer)
+                            <div style="margin-bottom: 8px;">
+                                <strong>{{ $answer->question->question_text }}</strong><br>
+                                @if($answer->answer_text)
+                                    {{ $answer->answer_text }}
+                                @elseif($answer->answer_json)
+                                    {{ implode(', ', $answer->answer_json) }}
+                                @else
+                                    —
+                                @endif
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+                @endif
+
                 <div class="box">
                     <div class="label">Name</div>
                     <div class="value">{{ $submission->name }}</div>

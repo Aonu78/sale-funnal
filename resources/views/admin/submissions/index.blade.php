@@ -188,6 +188,18 @@
                         <label>To</label>
                         <input class="input" type="date" name="to" value="{{ request('to') }}">
                     </div>
+
+                    <div class="field">
+                        <label>Lead Tag</label>
+                        <select class="select" name="tag">
+                            <option value="">All Tags</option>
+                            <option value="IUL_Prospect" {{ request('tag')=='IUL_Prospect'?'selected':'' }}>🟢 IUL Lead</option>
+                            <option value="Term_Life_Prospect" {{ request('tag')=='Term_Life_Prospect'?'selected':'' }}>🔵 Term Life Lead</option>
+                            <option value="IRA_Rollover_Prospect" {{ request('tag')=='IRA_Rollover_Prospect'?'selected':'' }}>🟠 IRA Rollover Lead</option>
+                            <option value="Annuity_Prospect" {{ request('tag')=='Annuity_Prospect'?'selected':'' }}>🔴 Annuity Lead</option>
+                            <option value="Hybrid_Strategy" {{ request('tag')=='Hybrid_Strategy'?'selected':'' }}>🟣 Multi-Product Lead</option>
+                        </select>
+                    </div>
                 </div>
 
                 <div class="filters-actions">
@@ -222,7 +234,7 @@
                         <th>Name</th>
                         <th>Email</th>
                         <th>Phone</th>
-                        <th>Answer</th>
+                        <th>Detailed Answers</th>
                         <th>Actions</th>
 
                     </tr>
@@ -237,19 +249,23 @@
                             <a class="link" href="mailto:{{ $s->email }}">{{ $s->email }}</a>
                         </td>
                         <td class="mono">{{ $s->phone }}</td>
+                        
                         <td>
-                            @php
-                                $ans = strtolower((string) $s->question_answer);
-                            @endphp
-
-                            @if($ans === 'yes')
-                                <span class="badge badge-yes">Yes</span>
-                            @elseif($ans === 'no')
-                                <span class="badge badge-no">No</span>
-                            @elseif($ans === '' || $ans === null)
-                                <span class="badge badge-empty">—</span>
+                            @if($s->answers->count() > 0)
+                                @foreach($s->answers as $answer)
+                                    <div style="margin-bottom: 4px;">
+                                        <strong>{{ Str::limit($answer->question->question_text, 20) }}</strong><br>
+                                        @if($answer->answer_text)
+                                            {{ Str::limit($answer->answer_text, 20) }}
+                                        @elseif($answer->answer_json)
+                                            {{ Str::limit(implode(', ', $answer->answer_json), 20) }}
+                                        @else
+                                            —
+                                        @endif
+                                    </div>
+                                @endforeach
                             @else
-                                <span class="badge">{{ $s->question_answer }}</span>
+                                —
                             @endif
                         </td>
                         <td>

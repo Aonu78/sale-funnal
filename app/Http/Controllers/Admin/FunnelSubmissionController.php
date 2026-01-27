@@ -14,7 +14,7 @@ class FunnelSubmissionController extends Controller
     {
         $funnels = Funnel::orderBy('title')->get();
 
-        $q = FunnelSubmission::query()->with('funnel');
+        $q = FunnelSubmission::query()->with('funnel', 'answers.question');
 
         if ($request->filled('funnel_id')) {
             $q->where('funnel_id', $request->funnel_id);
@@ -40,6 +40,10 @@ class FunnelSubmissionController extends Controller
             $q->whereDate('created_at', '<=', $request->to);
         }
 
+        if ($request->filled('tag')) {
+            $q->where('tag', $request->tag);
+        }
+
         $submissions = $q->latest()->paginate(25)->withQueryString();
 
         return view('admin.submissions.index', compact('submissions','funnels'));
@@ -47,7 +51,7 @@ class FunnelSubmissionController extends Controller
 
     public function show(FunnelSubmission $submission)
     {
-        $submission->load('funnel');
+        $submission->load('funnel', 'answers.question');
         return view('admin.submissions.show', compact('submission'));
     }
 
@@ -59,7 +63,7 @@ class FunnelSubmissionController extends Controller
 
     public function export(Request $request): StreamedResponse
     {
-        $q = FunnelSubmission::query()->with('funnel');
+        $q = FunnelSubmission::query()->with('funnel', 'answers.question');
 
         if ($request->filled('funnel_id')) {
             $q->where('funnel_id', $request->funnel_id);
@@ -85,6 +89,10 @@ class FunnelSubmissionController extends Controller
             $q->whereDate('created_at', '<=', $request->to);
         }
 
+        if ($request->filled('tag')) {
+            $q->where('tag', $request->tag);
+        }
+
         $filename = 'submissions_' . now()->format('Y-m-d_H-i') . '.csv';
 
         return response()->streamDownload(function () use ($q) {
@@ -99,11 +107,28 @@ class FunnelSubmissionController extends Controller
                 'Phone',
                 'Answer',
                 'IP',
+                'Tag',
+                'Preferred Call Date From',
+                'Preferred Call Date To',
+                'Call Availability Description',
+                'All Answers',
             ]);
 
             // Stream rows (avoid memory issues)
             $q->orderByDesc('id')->chunk(500, function ($rows) use ($out) {
                 foreach ($rows as $s) {
+                    $allAnswers = [];
+                    foreach ($s->answers as $index => $answer) {
+                        $questionText = $answer->question->question_text ?? 'Unknown Question';
+                        $answerValue = '';
+                        if ($answer->answer_text) {
+                            $answerValue = $answer->answer_text;
+                        } elseif ($answer->answer_json) {
+                            $answerValue = implode(', ', $answer->answer_json);
+                        }
+                        $allAnswers[] = "Answer " . ($index + 1) . ": " . $answerValue;
+                    }
+
                     fputcsv($out, [
                         optional($s->created_at)->format('Y-m-d H:i:s'),
                         optional($s->funnel)->title,
@@ -112,6 +137,11 @@ class FunnelSubmissionController extends Controller
                         $s->phone,
                         $s->question_answer,
                         $s->ip_address,
+                        $s->tag,
+                        $s->preferred_call_date_from,
+                        $s->preferred_call_date_to,
+                        $s->call_availability_description,
+                        implode("\n", $allAnswers),
                     ]);
                 }
             });

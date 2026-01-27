@@ -8,7 +8,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class FunnelSubmission extends Model
 {
     protected $fillable = [
-        'funnel_id','name','email','phone','question_answer','ip_address','user_agent'
+        'funnel_id','name','email','phone','question_answer','ip_address','user_agent',
+        'preferred_call_date_from','preferred_call_date_to','call_availability_description'
     ];
 
     public function funnel(): BelongsTo

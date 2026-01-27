@@ -189,6 +189,18 @@
                         <label>To</label>
                         <input class="input" type="date" name="to" value="<?php echo e(request('to')); ?>">
                     </div>
+
+                    <div class="field">
+                        <label>Lead Tag</label>
+                        <select class="select" name="tag">
+                            <option value="">All Tags</option>
+                            <option value="IUL_Prospect" <?php echo e(request('tag')=='IUL_Prospect'?'selected':''); ?>>🟢 IUL Lead</option>
+                            <option value="Term_Life_Prospect" <?php echo e(request('tag')=='Term_Life_Prospect'?'selected':''); ?>>🔵 Term Life Lead</option>
+                            <option value="IRA_Rollover_Prospect" <?php echo e(request('tag')=='IRA_Rollover_Prospect'?'selected':''); ?>>🟠 IRA Rollover Lead</option>
+                            <option value="Annuity_Prospect" <?php echo e(request('tag')=='Annuity_Prospect'?'selected':''); ?>>🔴 Annuity Lead</option>
+                            <option value="Hybrid_Strategy" <?php echo e(request('tag')=='Hybrid_Strategy'?'selected':''); ?>>🟣 Multi-Product Lead</option>
+                        </select>
+                    </div>
                 </div>
 
                 <div class="filters-actions">
@@ -223,7 +235,7 @@
                         <th>Name</th>
                         <th>Email</th>
                         <th>Phone</th>
-                        <th>Answer</th>
+                        <th>Detailed Answers</th>
                         <th>Actions</th>
 
                     </tr>
@@ -238,19 +250,25 @@
                             <a class="link" href="mailto:<?php echo e($s->email); ?>"><?php echo e($s->email); ?></a>
                         </td>
                         <td class="mono"><?php echo e($s->phone); ?></td>
+                        
                         <td>
-                            <?php
-                                $ans = strtolower((string) $s->question_answer);
-                            ?>
+                            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($s->answers->count() > 0): ?>
+                                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php $__currentLoopData = $s->answers; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $answer): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                    <div style="margin-bottom: 4px;">
+                                        <strong><?php echo e(Str::limit($answer->question->question_text, 20)); ?></strong><br>
+                                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($answer->answer_text): ?>
+                                            <?php echo e(Str::limit($answer->answer_text, 20)); ?>
 
-                            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($ans === 'yes'): ?>
-                                <span class="badge badge-yes">Yes</span>
-                            <?php elseif($ans === 'no'): ?>
-                                <span class="badge badge-no">No</span>
-                            <?php elseif($ans === '' || $ans === null): ?>
-                                <span class="badge badge-empty">—</span>
+                                        <?php elseif($answer->answer_json): ?>
+                                            <?php echo e(Str::limit(implode(', ', $answer->answer_json), 20)); ?>
+
+                                        <?php else: ?>
+                                            —
+                                        <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                                    </div>
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
                             <?php else: ?>
-                                <span class="badge"><?php echo e($s->question_answer); ?></span>
+                                —
                             <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
                         </td>
                         <td>

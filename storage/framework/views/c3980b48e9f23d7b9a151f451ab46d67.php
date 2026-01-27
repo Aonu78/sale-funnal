@@ -61,6 +61,52 @@ if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
       </div>
+      <div style="margin-top:12px;">
+        <label style="font-size:14px;color:#0f172a;font-weight:500;">Your Availability For 15-30 Minutes Slot</label>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <div style="margin-top:8px;">
+          <label style="font-size:12px;color:#64748b;">Select the date</label>
+          <input name="preferred_call_date_from" type="date" value="<?php echo e(old('preferred_call_date_from')); ?>"
+                 style="width:90%;padding:12px;border-radius:14px;border:1px solid rgba(0,0,0,.15);margin-top:4px;">
+          <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php $__errorArgs = ['preferred_call_date_from'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <div style="color:#b91c1c;font-size:12px;margin-top:6px;"><?php echo e($message); ?></div> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+        </div>
+
+        <div style="margin-top:8px;">
+          <label style="font-size:12px;color:#64748b;">Select time</label>
+          <input name="preferred_call_date_to" type="time" value="<?php echo e(old('preferred_call_date_to')); ?>"
+                 style="width:90%;padding:12px;border-radius:14px;border:1px solid rgba(0,0,0,.15);margin-top:4px;">
+          <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php $__errorArgs = ['preferred_call_date_to'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <div style="color:#b91c1c;font-size:12px;margin-top:6px;"><?php echo e($message); ?></div> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+        </div>
+      </div>
+
+      <div style="margin-top:12px;">
+        <label style="font-size:12px;color:#64748b;">Description (Optional)</label>
+        <textarea name="call_availability_description" rows="3" placeholder="Please describe your availability..."
+                  style="width:95%;padding:12px;border-radius:14px;border:1px solid rgba(0,0,0,.15);resize:vertical;"><?php echo e(old('call_availability_description')); ?></textarea>
+        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php $__errorArgs = ['call_availability_description'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <div style="color:#b91c1c;font-size:12px;margin-top:6px;"><?php echo e($message); ?></div> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+      </div>
 
       <button style="margin-top:14px;padding:12px 14px;border-radius:14px;border:none;color:#fff;background:#0f172a;cursor:pointer;width:100%;">
         👉 See My Personalized Options

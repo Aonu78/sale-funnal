@@ -88,6 +88,28 @@
                     <div class="value"><?php echo e($submission->question_answer ?: '—'); ?></div>
                 </div>
 
+                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($submission->answers->count() > 0): ?>
+                <div class="box" style="grid-column: span 2;">
+                    <div class="label">Detailed Answers</div>
+                    <div class="value">
+                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php $__currentLoopData = $submission->answers; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $answer): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <div style="margin-bottom: 8px;">
+                                <strong><?php echo e($answer->question->question_text); ?></strong><br>
+                                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($answer->answer_text): ?>
+                                    <?php echo e($answer->answer_text); ?>
+
+                                <?php elseif($answer->answer_json): ?>
+                                    <?php echo e(implode(', ', $answer->answer_json)); ?>
+
+                                <?php else: ?>
+                                    —
+                                <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                            </div>
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                    </div>
+                </div>
+                <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+
                 <div class="box">
                     <div class="label">Name</div>
                     <div class="value"><?php echo e($submission->name); ?></div>
