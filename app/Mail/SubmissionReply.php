@@ -13,15 +13,15 @@ class SubmissionReply extends Mailable
     use Queueable, SerializesModels;
 
     public $subject;
-    public $message;
+    public $body;
 
     /**
      * Create a new message instance.
      */
-    public function __construct($subject, $message)
+    public function __construct($subject, $body)
     {
         $this->subject = $subject;
-        $this->message = $message;
+        $this->body = $body;
     }
 
     /**

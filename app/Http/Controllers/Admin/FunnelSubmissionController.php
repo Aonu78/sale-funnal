@@ -10,6 +10,8 @@ use App\Models\FunnelSubmission;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 
 class FunnelSubmissionController extends Controller
 {
@@ -169,9 +171,37 @@ class FunnelSubmissionController extends Controller
             'message' => 'required|string',
         ]);
 
-        Mail::to($submission->email)->send(new SubmissionReply($data['subject'], $data['message']));
+        // Use PHPMailer to send email
+        $mail = new PHPMailer(true);
 
-        return redirect()->route('admin.submissions.show', $submission)->with('success', 'Reply sent successfully');
+        try {
+            // Server settings
+            $mail->isSMTP();
+            $mail->Host = 'smtp.hostinger.com';
+            $mail->SMTPAuth = true;
+            $mail->Username = 'support@answerdone.com';
+            $mail->Password = 'D_DHSwr#*c8.';
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+            $mail->Port = 587;
+
+            // Recipients
+            $mail->setFrom('support@answerdone.com', 'Support');
+            $mail->addAddress("syedaoonhussain@gmail.com");
+
+            // Content
+            $mail->isHTML(true);
+            $mail->Subject = $data['subject'];
+            $mail->Body = '<!DOCTYPE html><html><head><meta charset="utf-8"><title>' . $data['subject'] . '</title></head><body><p>' . nl2br(htmlspecialchars($data['message'])) . '</p></body></html>';
+
+            $mail->send();
+
+            \Log::info('Email sent to ' . $submission->email . ' with subject: ' . $data['subject']);
+
+            return redirect()->route('admin.submissions.show', $submission)->with('success', 'Reply sent successfully');
+        } catch (Exception $e) {
+            \Log::error('Email failed to send: ' . $mail->ErrorInfo);
+            return redirect()->route('admin.submissions.show', $submission)->with('error', 'Failed to send reply: ' . $mail->ErrorInfo);
+        }
     }
 
 }

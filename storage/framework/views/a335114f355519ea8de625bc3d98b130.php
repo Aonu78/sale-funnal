@@ -65,6 +65,7 @@
 
         <div style="display:flex;gap:10px;flex-wrap:wrap;">
             <a class="btn" href="<?php echo e(route('admin.submissions.index')); ?>">Back</a>
+            <a class="btn" style="background:#10b981;color:#fff;" href="<?php echo e(route('admin.submissions.reply', $submission)); ?>">Reply</a>
             <form method="POST" action="<?php echo e(route('admin.submissions.destroy', $submission)); ?>">
                 <?php echo csrf_field(); ?>
                 <?php echo method_field('DELETE'); ?>
