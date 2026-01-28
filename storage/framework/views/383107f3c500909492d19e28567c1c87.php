@@ -274,6 +274,7 @@
                         <td>
                             <div style="display:flex;gap:10px;flex-wrap:wrap;">
                                 <a class="btn" style="padding:8px 10px;" href="<?php echo e(route('admin.submissions.show', $s)); ?>">View</a>
+                                <a class="btn" style="padding:8px 10px;background:#10b981;color:#fff;" href="<?php echo e(route('admin.submissions.reply', $s)); ?>">Reply</a>
 
                                 <form method="POST" action="<?php echo e(route('admin.submissions.destroy', $s)); ?>">
                                     <?php echo csrf_field(); ?>

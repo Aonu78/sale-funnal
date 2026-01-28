@@ -79,6 +79,9 @@
                         <a class="link" href="<?php echo e(url('/admin')); ?>">Home</a>
                         <a class="link" href="<?php echo e(url('/admin/funnels')); ?>">Funnels</a>
                         <a class="link" href="<?php echo e(url('/admin/submissions')); ?>">Submissions</a>
+                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(auth()->user()->is_admin ?? false): ?>
+                            <a class="link link-admin" href="<?php echo e(route('admin.email-templates.index')); ?>">Templates</a>
+                        <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
                     <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
                 </div>
             </div>

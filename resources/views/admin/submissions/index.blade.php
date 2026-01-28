@@ -271,6 +271,7 @@
                         <td>
                             <div style="display:flex;gap:10px;flex-wrap:wrap;">
                                 <a class="btn" style="padding:8px 10px;" href="{{ route('admin.submissions.show', $s) }}">View</a>
+                                <a class="btn" style="padding:8px 10px;background:#10b981;color:#fff;" href="{{ route('admin.submissions.reply', $s) }}">Reply</a>
 
                                 <form method="POST" action="{{ route('admin.submissions.destroy', $s) }}">
                                     @csrf

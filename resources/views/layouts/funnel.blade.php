@@ -79,6 +79,9 @@
                         <a class="link" href="{{ url('/admin') }}">Home</a>
                         <a class="link" href="{{ url('/admin/funnels') }}">Funnels</a>
                         <a class="link" href="{{ url('/admin/submissions') }}">Submissions</a>
+                        @if(auth()->user()->is_admin ?? false)
+                            <a class="link link-admin" href="{{ route('admin.email-templates.index') }}">Templates</a>
+                        @endif
                     @endauth
                 </div>
             </div>

@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Mail\SubmissionReply;
+use App\Models\EmailTemplate;
 use App\Models\Funnel;
 use App\Models\FunnelSubmission;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class FunnelSubmissionController extends Controller
@@ -150,6 +153,25 @@ class FunnelSubmissionController extends Controller
         }, $filename, [
             'Content-Type' => 'text/csv; charset=UTF-8',
         ]);
+    }
+
+    public function reply(FunnelSubmission $submission)
+    {
+        $submission->load('funnel');
+        $emailTemplates = EmailTemplate::where('is_active', true)->orderBy('name')->get();
+        return view('admin.submissions.reply', compact('submission', 'emailTemplates'));
+    }
+
+    public function sendReply(Request $request, FunnelSubmission $submission)
+    {
+        $data = $request->validate([
+            'subject' => 'required|string|max:255',
+            'message' => 'required|string',
+        ]);
+
+        Mail::to($submission->email)->send(new SubmissionReply($data['subject'], $data['message']));
+
+        return redirect()->route('admin.submissions.show', $submission)->with('success', 'Reply sent successfully');
     }
 
 }

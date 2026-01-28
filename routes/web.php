@@ -35,6 +35,12 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::get('submissions/{submission}', [\App\Http\Controllers\Admin\FunnelSubmissionController::class, 'show'])
         ->name('submissions.show');
 
+    Route::get('submissions/{submission}/reply', [\App\Http\Controllers\Admin\FunnelSubmissionController::class, 'reply'])
+        ->name('submissions.reply');
+
+    Route::post('submissions/{submission}/reply', [\App\Http\Controllers\Admin\FunnelSubmissionController::class, 'sendReply'])
+        ->name('submissions.sendReply');
+
     Route::delete('submissions/{submission}', [\App\Http\Controllers\Admin\FunnelSubmissionController::class, 'destroy'])
         ->name('submissions.destroy');
 
@@ -75,6 +81,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
         ->name('funnels.rules.update');
     Route::delete('funnels/{funnel}/routing-rules/{rule}', [\App\Http\Controllers\Admin\FunnelRoutingRuleController::class, 'destroy'])
         ->name('funnels.rules.destroy');
+
+    Route::resource('email-templates', \App\Http\Controllers\Admin\EmailTemplateController::class);
 
 });
 

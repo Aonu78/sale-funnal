@@ -15,6 +15,24 @@
                     <x-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
+                    @if(Auth::user()->is_admin ?? false)
+                        <!-- Admin Dropdown -->
+                        <div class="relative">
+                            <button @click="adminOpen = !adminOpen" class="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium leading-5 text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out">
+                                {{ __('Manage') }}
+                                <svg class="ml-2 -mr-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </button>
+                            <div x-show="adminOpen" @click.away="adminOpen = false" x-data="{ adminOpen: false }" class="absolute z-50 mt-2 w-48 bg-white rounded-md shadow-lg">
+                                <div class="py-1">
+                                    <a href="{{ route('admin.funnels.index') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Funnels</a>
+                                    <a href="{{ route('admin.submissions.index') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Submissions</a>
+                                    <a href="{{ route('admin.email-templates.index') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Email Templates</a>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
                 </div>
             </div>
 
@@ -142,6 +160,17 @@
             <x-responsive-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
+            @if(Auth::user()->is_admin ?? false)
+                <x-responsive-nav-link href="{{ route('admin.funnels.index') }}" :active="request()->routeIs('admin.funnels.*')">
+                    {{ __('Funnels') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link href="{{ route('admin.submissions.index') }}" :active="request()->routeIs('admin.submissions.*')">
+                    {{ __('Submissions') }}
+                </x-responsive-nav-link>
+                <x-responsive-nav-link href="{{ route('admin.email-templates.index') }}" :active="request()->routeIs('admin.email-templates.*')">
+                    {{ __('Email Templates') }}
+                </x-responsive-nav-link>
+            @endif
         </div>
 
         <!-- Responsive Settings Options -->

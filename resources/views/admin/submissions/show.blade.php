@@ -65,6 +65,7 @@
 
         <div style="display:flex;gap:10px;flex-wrap:wrap;">
             <a class="btn" href="{{ route('admin.submissions.index') }}">Back</a>
+            <a class="btn" style="background:#10b981;color:#fff;" href="{{ route('admin.submissions.reply', $submission) }}">Reply</a>
             <form method="POST" action="{{ route('admin.submissions.destroy', $submission) }}">
                 @csrf
                 @method('DELETE')
