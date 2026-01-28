@@ -9,7 +9,7 @@ class FunnelSubmission extends Model
 {
     protected $fillable = [
         'funnel_id','name','email','phone','question_answer','ip_address','user_agent',
-        'preferred_call_date_from','preferred_call_date_to','call_availability_description'
+        'preferred_call_date_from','preferred_call_date_to','call_availability_description','replied'
     ];
 
     public function funnel(): BelongsTo

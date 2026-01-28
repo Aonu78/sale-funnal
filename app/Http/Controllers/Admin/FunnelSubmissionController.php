@@ -195,6 +195,9 @@ class FunnelSubmissionController extends Controller
 
             $mail->send();
 
+            // Mark submission as replied
+            $submission->update(['replied' => true]);
+
             \Log::info('Email sent to ' . $submission->email . ' with subject: ' . $data['subject']);
 
             return redirect()->route('admin.submissions.show', $submission)->with('success', 'Reply sent successfully');

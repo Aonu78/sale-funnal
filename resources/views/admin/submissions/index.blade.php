@@ -234,6 +234,7 @@
                         <th>Name</th>
                         <th>Email</th>
                         <th>Phone</th>
+                        <th>Status</th>
                         <th>Detailed Answers</th>
                         <th>Actions</th>
 
@@ -249,7 +250,15 @@
                             <a class="link" href="mailto:{{ $s->email }}">{{ $s->email }}</a>
                         </td>
                         <td class="mono">{{ $s->phone }}</td>
-                        
+
+                        <td>
+                            @if($s->replied)
+                                <span class="badge badge-yes">Replied</span>
+                            @else
+                                <span class="badge badge-no">Unreplied</span>
+                            @endif
+                        </td>
+
                         <td>
                             @if($s->answers->count() > 0)
                                 @foreach($s->answers as $answer)
