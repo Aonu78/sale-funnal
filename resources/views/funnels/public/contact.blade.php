@@ -67,7 +67,7 @@
       </div>
 
       <button style="margin-top:14px;padding:12px 14px;border-radius:14px;border:none;color:#fff;background:#0f172a;cursor:pointer;width:100%;">
-        👉 See My Personalized Options
+        Submit
       </button>
     </form>
   </div>

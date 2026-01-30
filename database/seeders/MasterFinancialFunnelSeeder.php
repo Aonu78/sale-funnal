@@ -21,7 +21,7 @@ class MasterFinancialFunnelSeeder extends Seeder
                 'title' => 'Find the Right Financial Strategy for Your Stage of Life',
                 'seo_title' => 'Financial Strategy Quiz (US Only)',
                 'seo_description' => 'Answer a few quick questions to see options that may fit your goals.',
-                'footer_text' => 'Educational-first approach. US-based. No obligation.',
+                'footer_text' => 'Get Financially educated. No obligation. No cost.',
                 'is_active' => true,
             ]
         );
@@ -81,7 +81,7 @@ class MasterFinancialFunnelSeeder extends Seeder
                 'Reducing market risk',
                 'Not sure – need guidance',
             ],
-            'Everyone continues forward.'
+            ''
         );
 
         $makeQuestion(

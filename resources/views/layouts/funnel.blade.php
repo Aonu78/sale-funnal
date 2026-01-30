@@ -69,27 +69,29 @@
     <div class="nav-wrap">
         <div class="nav">
             <div class="nav-left">
+                @auth
                 <a class="brand" href="{{ url('/') }}">
                     <span class="dot"></span>
                     <span>Insurance Funnels</span>
                 </a>
 
                 <div class="links">
-                    @auth
+                    
                         <a class="link" href="{{ url('/admin') }}">Home</a>
                         <a class="link" href="{{ url('/admin/funnels') }}">Funnels</a>
                         <a class="link" href="{{ url('/admin/submissions') }}">Submissions</a>
                         @if(auth()->user()->is_admin ?? false)
                             <a class="link link-admin" href="{{ route('admin.email-templates.index') }}">Templates</a>
                         @endif
-                    @endauth
+                    
                 </div>
+                @endauth
             </div>
 
             <div class="links">
-                @guest
+                {{-- @guest
                     <a class="link link-dark" href="{{ route('login') }}">Login</a>
-                @endguest
+                @endguest --}}
 
                 @auth
                     <span style="color:#64748b;font-size:13px;white-space:nowrap;">
