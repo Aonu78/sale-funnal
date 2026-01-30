@@ -27,7 +27,7 @@ class FunnelQuestionController extends Controller
             'key' => ['nullable','string','max:80'],
             'label' => ['required','string','max:255'],
             'help_text' => ['nullable','string','max:2000'],
-            'type' => ['required','in:radio,checkbox,text'],
+            'type' => ['required','in:radio,checkbox,text,dropdown'],
             'is_required' => ['nullable'],
             'is_active' => ['nullable'],
         ]);
@@ -57,7 +57,7 @@ class FunnelQuestionController extends Controller
             'key' => ['nullable','string','max:80'],
             'label' => ['required','string','max:255'],
             'help_text' => ['nullable','string','max:2000'],
-            'type' => ['required','in:radio,checkbox,text'],
+            'type' => ['required','in:radio,checkbox,text,dropdown'],
             'is_required' => ['nullable'],
             'is_active' => ['nullable'],
         ]);

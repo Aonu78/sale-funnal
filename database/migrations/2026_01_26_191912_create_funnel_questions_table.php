@@ -16,7 +16,7 @@ return new class extends Migration {
             $table->text('help_text')->nullable();
 
             // radio = single select, checkbox = multi select, text = free text
-            $table->enum('type', ['radio', 'checkbox', 'text'])->default('radio');
+            $table->enum('type', ['radio', 'checkbox', 'text', 'dropdown'])->default('radio');
 
             $table->boolean('is_required')->default(true);
             $table->boolean('is_active')->default(true);

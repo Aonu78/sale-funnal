@@ -55,6 +55,7 @@
           <select class="select" name="type">
             <option value="radio" {{ old('type',$question->type)==='radio'?'selected':'' }}>Radio (single)</option>
             <option value="checkbox" {{ old('type',$question->type)==='checkbox'?'selected':'' }}>Checkbox (multi)</option>
+            <option value="dropdown" {{ old('type',$question->type)==='dropdown'?'selected':'' }}>Dropdown</option>
             <option value="text" {{ old('type',$question->type)==='text'?'selected':'' }}>Text</option>
           </select>
         </div>
@@ -76,7 +77,7 @@
         <a class="btn" href="{{ route('admin.funnels.questions.index', $funnel) }}">Back</a>
 
         <div style="display:flex;gap:10px;flex-wrap:wrap;">
-          @if(in_array($question->type, ['radio','checkbox']))
+          @if(in_array($question->type, ['radio','checkbox','dropdown']))
             <a class="btn" href="{{ route('admin.questions.options.index', $question) }}">Manage Options</a>
           @endif
           <button class="btn btn-primary" type="submit">Update</button>

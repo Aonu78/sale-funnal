@@ -40,6 +40,13 @@
             </label>
           @endforeach
         </div>
+      @elseif($question->type === 'dropdown')
+        <select name="answer" style="width:100%;padding:12px;border-radius:14px;border:1px solid rgba(0,0,0,.15);">
+          <option value="">Select an option...</option>
+          @foreach($question->options->where('is_active', true) as $opt)
+            <option value="{{ $opt->label }}" {{ old('answer', $value)===$opt->label ? 'selected' : '' }}>{{ $opt->label }}</option>
+          @endforeach
+        </select>
       @else
         <div style="display:grid;gap:10px;margin-top:10px;">
           @foreach($question->options->where('is_active', true) as $opt)

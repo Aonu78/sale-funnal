@@ -52,6 +52,7 @@
           <select class="select" name="type">
             <option value="radio" {{ old('type')==='radio'?'selected':'' }}>Radio (single)</option>
             <option value="checkbox" {{ old('type')==='checkbox'?'selected':'' }}>Checkbox (multi)</option>
+            <option value="dropdown" {{ old('type')==='dropdown'?'selected':'' }}>Dropdown</option>
             <option value="text" {{ old('type')==='text'?'selected':'' }}>Text</option>
           </select>
           @error('type') <div class="err">{{ $message }}</div> @enderror
