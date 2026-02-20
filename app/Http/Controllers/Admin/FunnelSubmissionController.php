@@ -166,39 +166,39 @@ class FunnelSubmissionController extends Controller
 
     public function sendReply(Request $request, FunnelSubmission $submission)
     {
-        $data = $request->validate([
-            'subject' => 'required|string|max:255',
-            'message' => 'required|string',
-        ]);
+        // $data = $request->validate([
+        //     'subject' => 'required|string|max:255',
+        //     'message' => 'required|string',
+        // ]);
 
         // Use PHPMailer to send email
-        $mail = new PHPMailer(true);
+        // $mail = new PHPMailer(true);
 
-        try {
-            // Server settings
-            $mail->isSMTP();
-            $mail->Host = 'smtp.hostinger.com';
-            $mail->SMTPAuth = true;
-            $mail->Username = 'support@answerdone.com';
-            $mail->Password = 'D_DHSwr#*c8.';
-            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-            $mail->Port = 587;
+        // try {
+        //     // Server settings
+        //     $mail->isSMTP();
+        //     $mail->Host = 'smtp.hostinger.com';
+        //     $mail->SMTPAuth = true;
+        //     $mail->Username = 'support@answerdone.com';
+        //     $mail->Password = 'D_DHSwr#*c8.';
+        //     $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+        //     $mail->Port = 587;
 
-            // Recipients
-            $mail->setFrom('support@answerdone.com', 'Support');
-            $mail->addAddress("syedaoonhussain@gmail.com");
+        //     // Recipients
+        //     $mail->setFrom('support@answerdone.com', 'Support');
+        //     $mail->addAddress("syedaoonhussain@gmail.com");
 
-            // Content
-            $mail->isHTML(true);
-            $mail->Subject = $data['subject'];
-            $mail->Body = '<!DOCTYPE html><html><head><meta charset="utf-8"><title>' . $data['subject'] . '</title></head><body><p>' . nl2br(htmlspecialchars($data['message'])) . '</p></body></html>';
+        //     // Content
+        //     $mail->isHTML(true);
+        //     $mail->Subject = $data['subject'];
+        //     $mail->Body = '<!DOCTYPE html><html><head><meta charset="utf-8"><title>' . $data['subject'] . '</title></head><body><p>' . nl2br(htmlspecialchars($data['message'])) . '</p></body></html>';
 
-            $mail->send();
+        //     $mail->send();
 
-            // Mark submission as replied
+        //     // Mark submission as replied
             $submission->update(['replied' => true]);
 
-            \Log::info('Email sent to ' . $submission->email . ' with subject: ' . $data['subject']);
+        //     \Log::info('Email sent to ' . $submission->email . ' with subject: ' . $data['subject']);
 
             return redirect()->route('admin.submissions.show', $submission)->with('success', 'Reply sent successfully');
         } catch (Exception $e) {
