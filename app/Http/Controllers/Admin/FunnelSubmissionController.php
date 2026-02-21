@@ -174,7 +174,7 @@ class FunnelSubmissionController extends Controller
         // Use PHPMailer to send email
         // $mail = new PHPMailer(true);
 
-        // try {
+        try {
         //     // Server settings
         //     $mail->isSMTP();
         //     $mail->Host = 'smtp.hostinger.com';
